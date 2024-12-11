@@ -1,0 +1,172 @@
+<html><head><meta charset="utf-8"/><title>NO1</title>
+<meta name="NO ONE's TOKEN" content="NO1"/>
+<link rel="icon" href="favicon.png"/>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #d2b48c;
+    color: white;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #d2b48c;
+}
+
+::-webkit-scrollbar-thumb {
+    background: white;
+    border: 3px solid #d2b48c;
+    border-radius: 6px;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+#bouncing-image {
+    width: 200px;
+    height: 200px;
+    position: fixed;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition: transform 0.3s ease;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(210, 180, 140, 0.9);
+    padding: 10px;
+    text-align: center;
+    z-index: 1000;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 14px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <img id="bouncing-image" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='white'/><text x='50' y='50' font-family='Arial' font-size='20' fill='tan' text-anchor='middle' dominant-baseline='middle'>NO1</text></svg>" alt="Bouncing Image"/>
+</div>
+
+<footer>
+    <a href="https://t.me/your_group" target="_blank" rel="noopener noreferrer">Telegram</a>
+    <a href="https://x.com" target="_blank" rel="noopener noreferrer">X.com</a>
+    <a href="https://pump.fun" target="_blank" rel="noopener noreferrer">Pump.fun</a>
+</footer>
+
+<script>
+const img = document.getElementById('bouncing-image');
+let isAnimating = false;
+let isRotating = false;
+let isPulsing = false;
+let x = window.innerWidth - 200; // Start at right edge
+let y = 0; // Start at top
+let dx = 2;
+let dy = 2;
+let rotation = 0;
+let clickCount = 0;
+
+function animate() {
+    if (!isAnimating) return;
+
+    const maxX = window.innerWidth - 200;
+    const maxY = window.innerHeight - 200;
+
+    x += dx;
+    y += dy;
+
+    if (x <= 0 || x >= maxX) dx = -dx;
+    if (y <= 0 || y >= maxY) dy = -dy;
+
+    x = Math.max(0, Math.min(x, maxX));
+    y = Math.max(0, Math.min(y, maxY));
+
+    let transform = `translate(${x}px, ${y}px)`;
+    
+    if (isRotating) {
+        rotation += 2;
+        transform += ` rotate(${rotation}deg)`;
+    }
+
+    if (isPulsing) {
+        transform += ` scale(${1 + Math.sin(Date.now() / 200) * 0.1})`;
+    }
+
+    img.style.transform = transform;
+    requestAnimationFrame(animate);
+}
+
+function resetPage() {
+    location.reload();
+}
+
+img.addEventListener('click', () => {
+    clickCount++;
+    
+    switch(clickCount) {
+        case 1:
+            isAnimating = true;
+            animate();
+            break;
+        case 2:
+            isRotating = true;
+            break;
+        case 3:
+            isPulsing = true;
+            break;
+        case 4:
+            img.style.display = 'none';
+            isAnimating = false;
+            // Set 1 minute timer to reset page
+            setTimeout(resetPage, 60000);
+            break;
+    }
+});
+
+window.addEventListener('resize', () => {
+    const maxX = window.innerWidth - 200;
+    const maxY = window.innerHeight - 200;
+    x = Math.min(x, maxX);
+    y = Math.min(y, maxY);
+});
+
+img.style.transform = `translate(${x}px, ${y}px)`;
+</script>
+</body></html>
